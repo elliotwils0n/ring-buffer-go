@@ -4,21 +4,21 @@ import (
 	"errors"
 )
 
-type RingBuffer struct {
-	buffer   []any
+type RingBuffer[T any] struct {
+	buffer   []T
 	size     int
 	capacity int
 	front    int
 	tail     int
 }
 
-func New() *RingBuffer {
-	return NewWithCapacity(32)
+func New[T any]() *RingBuffer[T] {
+	return NewWithCapacity[T](32)
 }
 
-func NewWithCapacity(capacity int) *RingBuffer {
-	return &RingBuffer{
-		buffer:   make([]any, capacity, capacity),
+func NewWithCapacity[T any](capacity int) *RingBuffer[T] {
+	return &RingBuffer[T]{
+		buffer:   make([]T, capacity, capacity),
 		size:     0,
 		capacity: capacity,
 		front:    0,
@@ -26,7 +26,7 @@ func NewWithCapacity(capacity int) *RingBuffer {
 	}
 }
 
-func (rb *RingBuffer) PushBack(element any) {
+func (rb *RingBuffer[T]) PushBack(element T) {
 	if rb.full() {
 		rb.extendCapacity()
 	}
@@ -35,9 +35,10 @@ func (rb *RingBuffer) PushBack(element any) {
 	rb.buffer[rb.tail%rb.capacity] = element
 }
 
-func (rb *RingBuffer) PopFront() (any, error) {
+func (rb *RingBuffer[T]) PopFront() (T, error) {
 	if rb.empty() {
-		return nil, errors.New("Pop on an empty RingBuffer.")
+		var zero T
+		return zero, errors.New("Pop on an empty RingBuffer.")
 	}
 	value := rb.buffer[rb.front%rb.capacity]
 	rb.front++
@@ -45,31 +46,33 @@ func (rb *RingBuffer) PopFront() (any, error) {
 	return value, nil
 }
 
-func (rb *RingBuffer) PeekFront() (any, error) {
+func (rb *RingBuffer[T]) PeekFront() (T, error) {
 	if rb.empty() {
-		return nil, errors.New("PeekFront on an empty RingBuffer.")
+		var zero T
+		return zero, errors.New("PeekFront on an empty RingBuffer.")
 	}
 	return rb.buffer[rb.front%rb.capacity], nil
 }
 
-func (rb *RingBuffer) PeekTail() (any, error) {
+func (rb *RingBuffer[T]) PeekTail() (T, error) {
 	if rb.empty() {
-		return nil, errors.New("PeekTail on an empty RingBuffer.")
+		var zero T
+		return zero, errors.New("PeekTail on an empty RingBuffer.")
 	}
 	return rb.buffer[rb.tail%rb.capacity], nil
 }
 
-func (rb *RingBuffer) empty() bool {
+func (rb *RingBuffer[T]) empty() bool {
 	return rb.size == 0
 }
 
-func (rb *RingBuffer) full() bool {
+func (rb *RingBuffer[T]) full() bool {
 	return rb.size == rb.capacity
 }
 
-func (rb *RingBuffer) extendCapacity() {
+func (rb *RingBuffer[T]) extendCapacity() {
 	new_capacity := rb.capacity * 2
-	new_buffer := make([]any, new_capacity, new_capacity)
+	new_buffer := make([]T, new_capacity, new_capacity)
 	for offset := range rb.size {
 		new_buffer[offset] = rb.buffer[(rb.front+offset)%rb.capacity]
 	}

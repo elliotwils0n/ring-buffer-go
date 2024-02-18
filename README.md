@@ -20,10 +20,10 @@ import (
 #### Init Ring Buffer
 With or without initial capacity (defaults to 32)
 ```go
-rb := ring_buffer.New()
+rb := ring_buffer.New[int]()
 ```
 ```go
-rb := ring_buffer.NewWithCapacity(10);
+rb := ring_buffer.NewWithCapacity[int](10);
 ```
 
 #### Push, pop and peek elements with Ring Buffer
