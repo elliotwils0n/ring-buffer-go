@@ -210,6 +210,39 @@ func TestRingBehaviour(t *testing.T) {
 	}
 }
 
+func TestIndexesReset(t *testing.T) {
+	// given
+	rb := NewWithCapacity[int](3)
+	expectedBuffer := []int{4, 5, 3}
+
+	// when
+	rb.PushBack(1)
+	rb.PushBack(2)
+	rb.PushBack(3)
+	_, _ = rb.PopFront()
+	_, _ = rb.PopFront()
+	rb.PushBack(4)
+	rb.PushBack(5)
+	_, _ = rb.PopFront()
+
+	// then
+	if rb.size != 2 {
+		t.Fatalf(`Should have size: 2, has: %d`, rb.size)
+	}
+	if rb.capacity != 3 {
+		t.Fatalf(`Should have original capacity: 3, has: %d`, rb.capacity)
+	}
+	if rb.front != 0 {
+		t.Fatalf(`Should have front: 0, has: %d`, rb.front)
+	}
+	if rb.tail != 1 {
+		t.Fatalf(`Should have tail: 1, has: %d`, rb.tail)
+	}
+	if !reflect.DeepEqual(rb.buffer, expectedBuffer) {
+		t.Fatalf(`Should have buffer: %v, has: %v`, expectedBuffer, rb.buffer)
+	}
+}
+
 func TestPeekFront(t *testing.T) {
 	// given
 	rb := NewWithCapacity[int](13)

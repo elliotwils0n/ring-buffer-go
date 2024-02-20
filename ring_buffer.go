@@ -43,6 +43,11 @@ func (rb *RingBuffer[T]) PopFront() (T, error) {
 	value := rb.buffer[rb.front%rb.capacity]
 	rb.front++
 	rb.size--
+	// reset front and tail indexes if possible
+	if rb.front%rb.capacity == 0 {
+		rb.front = 0
+		rb.tail = rb.size - 1
+	}
 	return value, nil
 }
 
