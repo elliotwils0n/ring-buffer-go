@@ -20,10 +20,10 @@ import (
 #### Init Ring Buffer
 With or without initial capacity (defaults to 32)
 ```go
-rb := ring_buffer.New[int]()
+rb := ringbuffer.New[int]()
 ```
 ```go
-rb := ring_buffer.NewWithCapacity[int](10);
+rb := ringbuffer.NewWithCapacity[int](10);
 ```
 
 #### Push, pop and peek elements with Ring Buffer
@@ -31,10 +31,18 @@ Push back
 ```go
 rb.PushBack(123)
 ```
+Push front
+```go
+rb.PushFront(123)
+```
 
 Pop front, error returned on empty Ring Buffer
 ```go
 element, err := rb.PopFront()
+```
+Pop back, error returned on empty Ring Buffer
+```go
+element, err := rb.PopBack()
 ```
 
 Peek front/back, error returned on empty Ring Buffer
