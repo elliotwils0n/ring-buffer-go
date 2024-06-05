@@ -99,7 +99,7 @@ func TestPushFront(t *testing.T) {
 		t.Fatalf(`should have tail: 0, has: %d`, rb.tail)
 	}
 	if !reflect.DeepEqual(rb.buffer, expectedBuffer) {
-		t.Fatalf(`When PushFront() called then should have buffer: %v, has: %v`, expectedBuffer, rb.buffer)
+		t.Fatalf(`should have buffer: %v, has: %v`, expectedBuffer, rb.buffer)
 	}
 }
 
